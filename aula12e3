@@ -1,0 +1,904 @@
+# R Intermediário - Aula 1
+
+## Prof. Neylson Crepalde
+
+### MQuinho 2020
+
+Aula 01 - **Loops e Estruturas de Controle** - *Introdução*
+
+```{r}
+print(1)
+print(2)
+print(3)
+print(4)
+print(5)
+print(6)
+print(7)
+print(8)
+print(9)
+print(10)
+```
+
+**LOOP**, laço. FOR
+
+``` {.r}
+PARA (item in conjunto_de_dados) {
+  instrução1
+  instrução2
+  instrução3
+}
+```
+
+```{r}
+# Comentário
+# i = iterador
+# Processo iterativo em que
+# Rodada 1: i = 1
+# Rodada 2: i = 2
+# Rodada 16: i = 16
+for (i in 1:30) {
+  print(i)
+}
+```
+
+```{r}
+for (item in 1:10) {
+  res = sqrt(item + 3)
+  print(res)
+}
+```
+
+```{r}
+iris[[1]]
+```
+
+```{r}
+for (col in 1:4) {
+  print(
+    mean(iris[[col]])
+  )
+}
+```
+
+# Condicionais
+
+```{r}
+x = 10
+y = 15
+if (x == 10){
+  x = x^2
+}
+if (y == 20){
+  y = y^2
+}
+```
+
+```{r}
+y
+```
+
+# Combinando loops e condicionais
+
+Nós temos um sistema que faz classificação de categorias de faixa etária.
+
+1.  Abaixo de 18 anos = criança
+2.  Acima ou igual a 18 anos = adulto
+
+```{r}
+for (idade in 1:30) {
+  if (idade < 18) {
+    print("criança")
+  }
+  if (idade >= 18) {
+    print("adulto")
+  }
+}
+```
+
+Vamos iterar de 1 até 40:
+
+1.  Abaixo de 18 anos = criança
+2.  De 18 até 25 = jovem adulto
+3.  De 26 até 40 = adulto
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  if (idade >= 18 & idade <= 25) {
+    print("Jovem adulto")
+  }
+  if (idade > 25) {
+    print("Adulto")
+  }
+}
+```
+
+Outra forma de resolver o problema de sobreposição de categorias - usando **if** e **else**
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  else {
+    print("adulto")
+  }
+}
+```
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  else if (idade <= 25) {
+    print("Jovem adulto")
+  }
+  else {
+    print("Adulto")
+  }
+}
+```
+
+# Brincando com dados do Enade 2014
+
+```{r}
+install.packages("readr")
+install.packages("dplyr")
+install.packages("questionr")
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(questionr)
+```
+
+```{r}
+# Leitura dos dados do Enade 2014
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+```
+
+```{r}
+enade
+```
+
+```{r}
+names(enade)
+```
+
+```{r}
+library(questionr)
+freq(enade[[101]])
+```
+
+```{r}
+library(car)
+```
+
+```{r}
+variavel = enade[[101]]
+```
+
+```{r}
+variavel = recode(variavel, "c(7,8)=NA")
+freq(variavel)
+```
+
+Automatizando o recode das variáveis nas posições 101 até 142
+
+```{r}
+freq(enade[[122]])
+```
+
+```{r}
+for (col in 101:142) {
+  enade[[col]] = recode(enade[[col]], "c(7,8)=NA")
+}
+```
+
+```{r}
+freq(enade[[141]])
+```
+
+# Loops WHILE e REPEAT
+
+```{r}
+x = 10
+while (x < 20) {
+  print(x)
+  x = x + 1
+}
+```
+
+```{r}
+y = 0
+repeat {
+  print(y)
+  y = y + 1
+  
+  if (y > 50) {
+    break
+  }
+}
+```
+
+Você é um professor e deseja fazer correção automática das provas de seus alunos.
+
+```{r}
+notas = c(8,6,4,10,7,9,4,6,5,9,8,4,5,9,7,8,5,3,4)
+correcao_simples = ifelse(notas > 5, "Aprovado", "Reprovado")
+correcao_simples
+```
+
+```{r}
+notas = c(8,6,4,10,7,9,4,6,5,9,8,4,5,9,7,8,5,3,4)
+for (nota in notas) {
+  if (nota >= 7) {
+    print("Aprovado")
+  } else if (nota >= 5) {
+    print("Recuperação")
+  } else {
+    print("Reprovado")
+  }
+}
+```
+
+# Functionals
+
+## Programação Funcional
+
+Programação funcional -\> Funções do código como funções matemáticas.
+
+y = x + 1
+
+Functionals = Funções que chamam outras funções - No R, estamos falando da família de funções APPLY
+
+```{r}
+for (col in 1:4) {
+  print(mean(iris[[col]]))
+}
+```
+
+```{r}
+sapply(iris[1:4],  mean)
+```
+
+```{r}
+for (i in 1:10) {
+  res = sqrt(i + 3)
+  print(res)
+}
+```
+
+```{r}
+sapply(1:10, function(x) sqrt(x + 3) )
+```
+
+```{r}
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+```
+
+```{r}
+freq(enade[[101]])
+```
+
+```{r}
+enade[101:142] = sapply(
+  enade[101:142],
+  function(x) recode(x, "c(7,8)=NA")
+)
+```
+
+```{r}
+freq(enade[[101]])
+```
+
+```{r}
+tapply(iris$Sepal.Length, iris$Species, mean)
+```
+
+```{r}
+# Classificar os alunos do enade por jovem e adulto
+summary(enade$nu_idade)
+```
+
+```{r}
+# Solução com loop
+enade$adulto = c()
+for (i in 1:nrow(enade)) {
+  if (enade$nu_idade[i] <= 25) {
+    enade$adulto[i] = "Jovem"
+  } else {
+    enade$adulto[i] = "Adulto"
+  }
+}
+freq(enade$adulto)
+```
+
+```{r}
+enade$jovem = ifelse(enade$nu_idade <= 25, "Jovem", "Adulto")
+freq(enade$jovem)
+```
+
+```{r}
+enade$jovemadulto = sapply(
+  enade$nu_idade,
+  function(x) {
+    if (x <= 25) {
+      return("Jovem")
+    } else {
+      return("Adulto")
+    }
+  }
+)
+freq(enade$jovemadulto)
+```
+
+```{r}
+enade = enade %>% 
+  mutate(jovem_adulto = if_else(nu_idade <= 25, "Jovem", "Adulto"))
+freq(enade$jovem_adulto)
+```
+
+```{r}
+enade %>% 
+  select(jovem_adulto, nu_idade, tp_sexo)
+```
+
+
+# Aula 02 - Funções
+
+```{r}
+mean(iris$Sepal.Length)
+sd(iris$Sepal.Length)
+summary(iris$Sepal.Length)
+```
+
+```{r}
+library(questionr)
+freq
+```
+
+## Partes da função
+
+3 partes:
+
+1.  Argumentos (Arguments)
+2.  Corpo (Body)
+3.  Ambiente (Environment)
+
+```{r}
+soma = function(x, y) {
+  res = x + y
+  print(x)
+  return(res)
+}
+```
+
+```{r}
+a = soma(5, 7)
+```
+
+```{r}
+a
+```
+
+```{r}
+f = function(x) {
+  res = x^2
+  res = x
+  return(res)
+}
+```
+
+```{r}
+b = f(3)
+```
+
+```{r}
+b
+```
+
+```{r}
+formals(soma)
+body(soma)
+environment(soma)
+environment(freq)
+```
+
+# Funções primitivas
+
+```{r}
+sum
+```
+
+# Teste com funções
+
+Vamos escrever uma função que pega uma variável numérica, centraliza na média, e vamos plotar um histograma mostrando a distribuição da variável centralizada.
+
+```{r}
+library(dplyr)
+library(readr)
+library(questionr)
+library(ggplot2)
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+```
+
+```{r}
+summary(enade$nt_ger)
+```
+
+```{r}
+centralizada = enade$nt_ger - mean(enade$nt_ger, na.rm = T)
+ggplot() +
+  geom_histogram(aes(centralizada)) +
+  labs(title = "Histograma")
+```
+
+```{r}
+enade[["nt_ce"]]
+```
+
+```{r}
+meuplot = function(nome, 
+                   titulo = "Hist", centralizado = T) {
+  
+  if (centralizado) {
+    variavel = enade[[nome]] - mean(enade[[nome]], na.rm=T)
+  } else {
+    variavel = enade[[nome]]
+  }
+  
+  g = ggplot() +
+    geom_histogram( aes( variavel ) ) +
+    labs(title = titulo)
+  
+  ggsave(paste0(nome, ".png"))
+  
+  return(g)
+}
+```
+
+```{r}
+meuplot("nt_ger")
+```
+
+```{r}
+amostra = enade %>% 
+  select(nt_ger, nt_fg, nt_ce, nu_idade, qe_i27:qe_i60)
+nomes = names(amostra)
+lapply(nomes, meuplot)
+```
+
+# Analisando dados do Enade 2014
+
+Leitura dos dados
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(questionr)
+library(car)
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+```
+
+1.  Vamos tratar as variáveis do questionário do estudante relacionadas à IES e práticas pedagógicas (variáveis 101 até 142)
+
+```{r}
+enade[101:142] = sapply(
+  enade[101:142],
+  function(x) recode(x, "c(7,8)=NA")
+)
+```
+
+```{r}
+freq(enade[[103]])
+```
+
+2.  Vamos corrigir a variável sexo
+
+```{r}
+freq(enade$tp_sexo)
+```
+
+```{r}
+enade$tp_sexo[enade$tp_sexo == 'N'] = NA
+```
+
+```{r}
+freq(enade$tp_sexo)
+```
+
+3.  Colocar labels nas variáveis de interesse
+
+```{r}
+enade = enade %>% 
+  mutate(
+    estcivil = case_when(
+      qe_i1 == 'a' ~ 'Solteiro',
+      qe_i1 == 'b' ~ 'Casado',
+      qe_i1 == 'c' ~ 'Separado',
+      qe_i1 == 'd' ~ 'Viúvo',
+      qe_i1 == 'e' ~ 'Outro'
+    ),
+    cor = case_when(
+      qe_i2 == 'a' ~ 'Branco',
+      qe_i2 == 'b' ~ 'Negro',
+      qe_i2 == 'c' ~ 'Pardo',
+      qe_i2 == 'd' ~ 'Amarelo',
+      qe_i2 == 'e' ~ 'Indígena'
+    ),
+    escopai = case_when(
+      qe_i4 == 'a' ~ 0,
+      qe_i4 == 'b' ~ 1,
+      qe_i4 == 'c' ~ 2,
+      qe_i4 == 'd' ~ 3,
+      qe_i4 == 'e' ~ 4,
+      qe_i4 == 'f' ~ 5
+    ),
+    escomae = case_when(
+      qe_i5 == 'a' ~ 0,
+      qe_i5 == 'b' ~ 1,
+      qe_i5 == 'c' ~ 2,
+      qe_i5 == 'd' ~ 3,
+      qe_i5 == 'e' ~ 4,
+      qe_i5 == 'f' ~ 5
+    ),
+    renda = case_when(
+      qe_i8 == 'a' ~ 0,
+      qe_i8 == 'b' ~ 1,
+      qe_i8 == 'c' ~ 2,
+      qe_i8 == 'd' ~ 3,
+      qe_i8 == 'e' ~ 4,
+      qe_i8 == 'f' ~ 5,
+      qe_i8 == 'g' ~ 6
+    )
+  )
+```
+
+```{r}
+enade %>% select(estcivil:renda)
+```
+
+```{r}
+#install.packages("GGally")
+library(GGally)
+ggpairs(enade %>% select(nt_ger, nu_idade, escopai,
+                        escomae, renda))
+```
+
+```{r}
+ggplot(enade, aes(x=cor, y=nt_ger)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(enade, aes(x=estcivil, y=nt_ger)) +
+  geom_boxplot()
+```
+
+Vamos implementar um modelo linear tentando explicar a variação de nota como uma função das variáveis idade, escolaridade do pai, escolaridade da mãe, renda, estado civil e cor da pele.
+
+$$
+NotaGeral = \beta_0 + \beta_1 Idade + \beta_2 Escopai + \beta_4 Renda + \beta_5 Estcivil + \beta_6 Cor + \epsilon
+$$
+
+```{r}
+modelo = lm(nt_ger ~ nu_idade + escomae + 
+              renda + estcivil + cor,
+            data = enade)
+```
+
+```{r}
+summary(modelo)
+```
+
+# Modelo Hierárquico
+
+```{r}
+library(lme4)
+library(merTools)
+library(lmtest)
+```
+
+```{r}
+modeloh = lmer(nt_ger ~ (1 | co_ies) + nu_idade + escomae + renda +
+                 estcivil + cor, data=enade)
+summary(modeloh)
+```
+
+Teste de *likelihood*:
+
+```{r}
+lrtest(modelo, modeloh)
+```
+
+```{r}
+library(MuMIn)
+r.squaredGLMM(modelo)
+r.squaredGLMM(modeloh)
+AIC(modelo, modeloh)
+```
+# Real Use Case - Modelo de Equações Estruturais com a PNAD 2014
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(questionr)
+library(lavaan)
+library(lavaanPlot)
+```
+
+# Extração da PNAD 2014
+
+```{r}
+# url dos dados
+url_dados = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dados_20170323.zip"
+# url do dicionario
+url_dicionario = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dicionarios_e_input_20170323.zip"
+# o caminho da pasta de armazenamento dos dados
+data_path = "./data/pnad2014"
+# Cria o diretório
+dir.create(data_path, recursive = T)
+# Download do dicionário
+download.file(
+  url_dicionario,
+  paste0(data_path, "/Dicionarios_e_input_20170323.zip")
+)
+# download dos dados
+download.file(
+  url_dados,
+  paste0(data_path, "/Dados_20170323.zip")
+)
+```
+
+Unzipa os arquivos
+
+```{r}
+unzip(
+  paste0(data_path, "/Dicionarios_e_input_20170323.zip"),
+  exdir = data_path
+)
+unzip(
+  paste0(data_path, "/Dados_20170323.zip"),
+  exdir = data_path
+)
+```
+
+```{r}
+list.files(data_path)
+```
+
+```{r}
+# Lista o que tem dentro da pasta com problema
+caminho_completo = paste0(data_path,"/", list.files(data_path)[3])
+arquivos = list.files(caminho_completo)
+# Copiar os arquivos necessários
+file.copy(
+  paste0(caminho_completo, "/", arquivos[2]) ,
+  paste0(data_path, "/dicionario_pessoas_pnad2014.xls")
+)
+```
+
+# Importar os dados da PNAD
+
+Estamos retomando deste lugar no segundo dia de projeto. Como o arquivo está salvo na pasta aula_pratica, não estamos conseguindo, de uma maneira simples, orientar o R para a pasta superior. Vamos inserir essa adaptação direto nos `paths` de leitura de arquivos.
+
+```{r}
+library(readxl)
+data_path = "../data/pnad2014"
+dicionario = read_xls(
+  paste0(data_path, "/dicionario_pessoas_pnad2014.xls"),
+  skip = 1
+) %>% filter(!is.na(`Código de variável`))
+dicionario$`Posição Inicial` = as.integer(dicionario$`Posição Inicial`)
+dicionario
+```
+
+```{r}
+posicoes = fwf_positions(
+  start = dicionario$`Posição Inicial`,
+  end = dicionario$`Posição Inicial` + dicionario$Tamanho - 1,
+  col_names = dicionario$`Código de variável`
+)
+pnad = read_fwf(paste0(data_path, "/Dados/PES2014.txt"), posicoes)
+```
+
+```{r}
+pnad
+```
+
+**Plano de voo**: Vamos escolher algumas variáveis para o modelo de equações estruturais que vamos estimar e tratá-las. Vamos trabalhar com
+
+-   Renda do trabalho principal (V9532)
+-   Status sócio-ocupacional (ISEI) - a construir a partir de V9906
+-   Anos de escolaridade (V4803)
+-   Preto (binária pretos=1, brancos=0) - construir a partir de V0404
+-   Ocupação do pai (V32019)
+-   Escolaridade do pai (V32012)
+-   Idade (V8005)
+-   $Idade^2$
+-   Mulher (binária a partir de V0302)
+-   Migração (V0501)
+
+**Filtro**: pessoas de 20 a 64 anos, trabalhando (V9001 = 1) e com renda
+
+```{r}
+# Começamos com a pnad
+amostra1 = pnad %>% 
+  # Selecionamos apenas as variáveis de interesse
+  dplyr::select(
+    V9532, V9906, V4803, V0404, V32019, V32012, V8005, 
+    V0302, V0501, V9001
+  ) %>% 
+  # Cria colunas de idade e renda
+  mutate(idade = as.integer(V8005), 
+         renda = as.integer(V9532)) %>% 
+  # Filtrando apenas os casos de interesse
+  # idade entre 20 e 64 anos, renda maior que 0 e trabalhando
+  filter(
+    idade >= 20, idade <= 64, V9001 == 1,
+    renda > 0, renda < 999999999998
+  ) %>% 
+  # Centralizando a idade na média
+  mutate(idade = idade - mean(idade, na.rm=T)) %>% 
+  # Criando o log natural da renda
+  mutate(lnrenda = log(renda)) %>% 
+  # Criando anosesco - transofrma V4803 em integer e subtrai 1
+  # Subtrai 1 para que 0 corresponda a nenhuma escolaridade
+  mutate(anosesco = as.integer(V4803) - 1L) %>% 
+  # Substituindo o valor 16 por NA
+  # Como já subtraímos 1 na variável, ao invés do valor original 17
+  # Vamos atribuir a 16 (não determinados) os casos missing
+  mutate(anosesco = case_when(
+    anosesco == 16 ~ NA_integer_,
+    TRUE ~ anosesco
+  )) %>% 
+  # Criando a variável negro
+  mutate(negro = case_when(
+    V0404 == 2 | V0404 == 6 ~ 0L,
+    V0404 == 4 | V0404 == 8 | V0404 == 0 ~ 1L
+  )) %>% 
+  # Criando escopai - categorias de escolaridade equivalentes
+  mutate(escopai = as.integer(V32012)) %>% 
+  mutate(escopai = case_when(
+    escopai == 11 ~ NA_integer_,
+    escopai == 12 ~ 0L,
+    escopai == 1 ~ 1L,
+    escopai == 4 ~ 2L,
+    escopai == 2 ~ 3L,
+    escopai == 5 | escopai == 7 ~ 4L,
+    escopai == 6 | escopai == 8 | escopai == 3 ~ 5L,
+    escopai == 9 ~ 6L,
+    escopai == 10 ~ 7L
+  )) %>% 
+  # Criando a idade ao quadrado
+  mutate(idade2 = idade^2) %>% 
+  # Criando a variável MULHER
+  mutate(mulher = case_when(
+    V0302 == 2 ~ 0L,
+    V0302 == 4 ~ 1L
+  )) %>% 
+  # Criando migração
+  mutate(migracao = case_when(
+    V0501 == 1 ~ 0L,
+    V0501 == 3 ~ 1L
+  )) %>% 
+  # Filtra apenas os casos em que escopai não é missing
+  filter(!is.na(escopai))
+amostra1
+```
+
+```{r}
+pnad %>% 
+  mutate(idade = as.integer(V8005), 
+         renda = as.integer(V9532)) %>% 
+  # Aplicar os filtros
+  filter(
+    idade >= 20, idade <= 64, V9001 == 1,
+    renda > 0, renda < 999999999998
+  ) %>% 
+  group_by(idade) %>% 
+  summarise(medrenda = mean(renda)) %>% 
+  ggplot(aes(x=idade, y=medrenda)) +
+  geom_point() + 
+  stat_smooth(method='lm', formula = 'y ~ poly(x, 2)')
+```
+
+### ISEI
+
+```{r}
+tabconv = read_csv('https://raw.githubusercontent.com/neylsoncrepalde/rintermediario/master/data/tabela_conversao_cbo_isco.csv')
+tabconv
+```
+
+Vamos associar o CBO a um código ISCO
+
+```{r}
+tabconv
+```
+
+```{r}
+# Começamos da amostra
+amostra = amostra1 %>% 
+  # modifica colunas V9906 e V32012 (CBO)
+  # para serem inteiros
+  mutate(V9906 = as.integer(V9906), V32019 = as.integer(V32019)) %>% 
+  # INNER JOIN - junta as tabelas da PNAD e tabela de conversão ISCO
+  # Junta informação de profissão do indivíduo
+  inner_join(
+    tabconv %>% dplyr::select(iscocode, cbo2002),
+    by = c("V9906" = "cbo2002")
+  ) %>% 
+  # Trocando o nome da variável iscocode
+  mutate(isco = iscocode) %>% dplyr::select(-iscocode) %>% 
+  # INNER JOIN - junta tabelas pelo cod de profissão do PAI
+  inner_join(
+    tabconv %>% dplyr::select(iscocode, cbo2002),
+    by = c("V32019" = "cbo2002")
+  ) %>% 
+  # Trocando o nome da variável
+  mutate(iscopai = iscocode) %>% dplyr::select(-iscocode)
+amostra
+```
+
+# Transformar ISCO para ISEI
+
+```{r}
+library(SocialPosition)
+amostra = recode_from_ISCO88_to_ISEI(amostra$isco, amostra)
+names(amostra)[ncol(amostra)] = 'isei'
+amostra = recode_from_ISCO88_to_ISEI(amostra$iscopai, amostra)
+names(amostra)[ncol(amostra)] = 'iseipai'
+amostra
+```
+
+Vamos verificar a correlação linear entre a escolaridade do filho e do pai
+
+```{r}
+ggplot(amostra, aes(x = iseipai, y = isei)) +
+  geom_jitter(alpha=.4) +
+  theme_bw() + 
+  stat_smooth(method='lm')
+```
+
+```{r}
+cor.test(amostra$iseipai, amostra$isei)
+```
+
+# Modelo de equações estruturais
+
+```{r}
+# Modelo de equações estruturais
+model = '
+  # variáveis latentes
+  socialorigin =~ iseipai + escopai
+  
+  # regressões
+  anosesco ~ socialorigin + negro + migracao
+  isei ~ anosesco + socialorigin + negro + mulher + migracao
+  lnrenda ~ anosesco + socialorigin + isei + negro + mulher + idade + idade2
+  
+  # covariâncias residuais
+  isei ~~ iseipai
+  anosesco ~~ escopai
+'
+mee = sem(model, data=amostra)
+summary(mee, standardized=T, rsquare=T)
+```
+
+```{r}
+lavaanPlot(model = mee, 
+           node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), 
+           coefs = T, covs=T, stars=T, stand=T)
+```
